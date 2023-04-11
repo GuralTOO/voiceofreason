@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Pressable, SafeAreaView, Button, PermissionsAndroid, Platform, StatusBar } from 'react-native';
 import Record from './Record';
-import { completeText, signInWithGoogle} from './ApiService';
+import { completeText, signIn} from './ApiService';
 import { ScrollView } from '@motify/components';
 import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
@@ -26,7 +26,7 @@ export default function App() {
 
   const callGPT = async (text: string) => {
     if(text == undefined || text == null || text == "" || text == " ") return;
-    completeText(text).then((response) => {
+    completeText(text, googleID).then((response) => {
       console.log(response.data.text);
       setGptResponse(response.data.text);
     });
@@ -35,10 +35,10 @@ export default function App() {
   return (
     <View style = {styles.container}> 
       <GoogleSigninButton
-        style={{width: 192, height: 48}}
+        style={{width: 192, height: 48, alignSelf: 'baseline'}}
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
-        onPress={signInWithGoogle}
+        onPress={() => signIn(setGoogleID)}
       />
       <Text style={styles.label}>Speech Text</Text>
       <TextInput multiline
